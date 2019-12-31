@@ -1,0 +1,95 @@
+version: '2.2'
+services:
+  es-01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+    container_name: es-01
+    environment:
+      - node.name=es-01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es-02,es-03
+      - cluster.initial_master_nodes=es-01,es-02,es-03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.license.self_generated.type=trial
+      - xpack.security.enabled=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data-01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+
+  es-02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+    container_name: es-02
+    environment:
+      - node.name=es-02
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es-01,es-03
+      - cluster.initial_master_nodes=es-01,es-02,es-03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.license.self_generated.type=trial
+      - xpack.security.enabled=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data-02:/usr/share/elasticsearch/data
+    ports:
+      - 9201:9201
+    networks:
+      - elastic
+
+  es-03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+    container_name: es-03
+    environment:
+      - node.name=es-03
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es-01,es-02
+      - cluster.initial_master_nodes=es-01,es-02,es-03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.license.self_generated.type=trial
+      - xpack.security.enabled=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data-03:/usr/share/elasticsearch/data
+    ports:
+      - 9202:9202
+    networks:
+      - elastic
+
+  kib-01:
+    image: docker.elastic.co/kibana/kibana:7.5.1
+    container_name: kib-01
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://es-01:9200
+      ELASTICSEARCH_HOSTS: http://es-01:9200
+      ELASTICSEARCH_USERNAME: kibana
+      ELASTICSEARCH_PASSWORD: ps5U8MotSNqDlUONnyrR
+    networks:
+      - elastic
+
+volumes:
+  data-01:
+    driver: local
+  data-02:
+    driver: local
+  data-03:
+    driver: local
+
+networks:
+  elastic:
+    driver: bridge
