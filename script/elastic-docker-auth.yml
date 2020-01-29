@@ -11,6 +11,7 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.license.self_generated.type=trial
+      - xpack.security.enabled=true
     ulimits:
       memlock:
         soft: -1
@@ -33,6 +34,7 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.license.self_generated.type=trial
+      - xpack.security.enabled=true
     ulimits:
       memlock:
         soft: -1
@@ -55,6 +57,7 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.license.self_generated.type=trial
+      - xpack.security.enabled=true
     ulimits:
       memlock:
         soft: -1
@@ -74,6 +77,8 @@ services:
     environment:
       ELASTICSEARCH_URL: http://es-01:9200
       ELASTICSEARCH_HOSTS: http://es-01:9200
+      ELASTICSEARCH_USERNAME: kibana
+      ELASTICSEARCH_PASSWORD: ps5U8MotSNqDlUONnyrR
     networks:
       - elastic
 
