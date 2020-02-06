@@ -9,21 +9,22 @@
 Untuk menggunakan repo ini : 
 * install docker 
 ```
-wget https://get.docker.com > install.sh
-sh install.sh
+wget https://get.docker.com 
+sh index.html
 ```
 * install docker-compose 
 ```
 curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
+cp /usr/local/bin/docker-compose /usr/sbin
 ```
 * clone repo aris
-`git clone https://github.com/naristo/elastic-docker-compose`
+`git clone http://gitlab.digi.corp.bankbtpn.co.id/naristo/elastic-docker-compose.git`
 
 ```
 Opsi : Bagi yang biasa menggunakan Vagrant jalankan `vagrant up` dilanjut deploy elastic stack 
        run `vagrant ssh` untuk ssh ke virtual machine yang sudah di create menggunakan vagrant
-
+sysctl -w vm.max_map_count=262144
 
 ```
 ## Untuk deploy Elastic Stack tanpa mengaktifkan Auth jalankan 
@@ -42,4 +43,5 @@ setelah docker es-01 up & running lanjutkan dengan setup password untuk elastics
 dan update kibana password in elastic-docker-auth.yml
 
 --- 
-sysctl -w vm.max_map_count=262144
+
+
