@@ -1,4 +1,4 @@
-# Sharing - Deploy elastic-stack using docker-compose
+# Deploy elastic-stack using docker-compose
 
 
 ## Requirement
