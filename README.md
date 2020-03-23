@@ -9,8 +9,9 @@
 Untuk menggunakan repo ini : 
 * install docker 
 ```
-wget https://get.docker.com 
-sh index.html
+curl -fsSL https://get.docker.com -o get-docker.sh
+chmod a+x get-docker.sh
+./get-docker.sh
 ```
 * install docker-compose 
 ```
