@@ -1,17 +1,18 @@
 version: '2.2'
 services:
-  es-01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
-    container_name: es-01
+  es-master-01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: es-master-01
     environment:
       - node.name=es-01
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es-02,es-03
-      - cluster.initial_master_nodes=es-01,es-02,es-03
+      - discovery.seed_hosts=es-master-02,es-master-03
+      - cluster.initial_master_nodes=es-master-01,es-master-02,es-master-03
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
+    mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
@@ -23,18 +24,19 @@ services:
     networks:
       - elastic
 
-  es-02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
-    container_name: es-02
+  es-master-02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: es-master-02
     environment:
-      - node.name=es-02
+      - node.name=es-master-02
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es-01,es-03
-      - cluster.initial_master_nodes=es-01,es-02,es-03
+      - discovery.seed_hosts=es-master-01,es-master-03
+      - cluster.initial_master_nodes=es-master-01,es-master-02,es-master-03
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
+    mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
@@ -46,18 +48,19 @@ services:
     networks:
       - elastic
 
-  es-03:
+  es-master-03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
     container_name: es-03
     environment:
-      - node.name=es-03
+      - node.name=es-master-03
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es-01,es-02
-      - cluster.initial_master_nodes=es-01,es-02,es-03
+      - discovery.seed_hosts=es-master-01,es-master-02
+      - cluster.initial_master_nodes=es-master-01,es-master-02,es-master-03
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
+    mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
@@ -69,16 +72,41 @@ services:
     networks:
       - elastic
 
-  kib-01:
-    image: docker.elastic.co/kibana/kibana:7.5.1
-    container_name: kib-01
+  kibana-01:
+    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
+    container_name: kibana-01
     ports:
       - 5601:5601
     environment:
-      ELASTICSEARCH_URL: http://es-01:9200
-      ELASTICSEARCH_HOSTS: http://es-01:9200
+      ELASTICSEARCH_URL: http://es-master-01:9200
+      ELASTICSEARCH_HOSTS: http://es-master-01:9200
       ELASTICSEARCH_USERNAME: kibana
       ELASTICSEARCH_PASSWORD: ps5U8MotSNqDlUONnyrR
+    networks:
+      - elastic
+  logstash-01:
+    image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+    container_name: logstash-01
+    ports:
+      - 5401:5401
+      - 5402:5402
+      - 5403:5403
+      - 5404:5404
+      - 5405:5405
+      - 5406:5406
+      - 5407:5407
+      - 5408:5408
+      - 5409:5409
+      - 5410:5410
+      - 5411:5411
+    environment:
+      ELASTICSEARCH_URL: http://es-master-01:9200
+      ELASTICSEARCH_HOSTS: http://es-master-01:9200
+      ELASTICSEARCH_USERNAME: logstash
+      ELASTICSEARCH_PASSWORD: ps5U8MotSNqDlUONnyrR
+    volumes:
+      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
+      - ./logstash/conf.d/:/usr/share/logstash/config/
     networks:
       - elastic
 

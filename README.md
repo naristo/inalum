@@ -1,4 +1,4 @@
-# Deploy elastic-stack using docker-compose
+# Inalum elastic-stack using docker-compose
 
 
 ## Requirement
@@ -39,7 +39,7 @@ run `docker-compose -f script/elastic-docker-auth.yml up`
 
 setelah docker es-01 up & running lanjutkan dengan setup password untuk elasticsearch
 * buka terminal baru 
-* jalankan command `docker exec es-01 /bin/bash -c "bin/elasticsearch-setup-passwords auto --batch --url http://es-01:9200"`
+* jalankan command `docker exec es-01 /bin/bash -c "bin/elasticsearch-setup-passwords auto --batch --url http://es-master-01:9200"`
 * copy user dan password yang tergenerate di screen `simpan atau di hapalkan`
 dan update kibana password in elastic-docker-auth.yml
 
