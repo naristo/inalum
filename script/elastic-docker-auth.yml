@@ -81,13 +81,14 @@ services:
       ELASTICSEARCH_URL: http://es-master-01:9200
       ELASTICSEARCH_HOSTS: http://es-master-01:9200
       ELASTICSEARCH_USERNAME: kibana
-      ELASTICSEARCH_PASSWORD: ps5U8MotSNqDlUONnyrR
+      ELASTICSEARCH_PASSWORD: 8EZZ0VbPI26AO9kvzFE8 
     networks:
       - elastic
   logstash-01:
     image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
     container_name: logstash-01
     ports:
+      - 9600:9600
       - 5401:5401
       - 5402:5402
       - 5403:5403
@@ -100,13 +101,14 @@ services:
       - 5410:5410
       - 5411:5411
     environment:
+      LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
       ELASTICSEARCH_URL: http://es-master-01:9200
       ELASTICSEARCH_HOSTS: http://es-master-01:9200
-      ELASTICSEARCH_USERNAME: logstash
-      ELASTICSEARCH_PASSWORD: ps5U8MotSNqDlUONnyrR
-#    volumes:
-#      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
-#      - ./logstash/conf.d/:/usr/share/logstash/config/
+      ELASTICSEARCH_USERNAME: logstash_system
+      ELASTICSEARCH_PASSWORD: 0qejE6zzTsl4wb0pzsRN
+    volumes:
+      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
+      - ./logstash/config/:/usr/share/logstash/config/
     networks:
       - elastic
 
