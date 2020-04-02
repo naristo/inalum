@@ -1,11 +1,5 @@
 # Inalum elastic-stack using docker-compose
 
-
-## Requirement
-* VM Machine ( virtualbox + vagrant )
-* Docker
-* Docker Compose
-
 Untuk menggunakan repo ini : 
 * install docker 
 ```
@@ -20,13 +14,12 @@ chmod +x /usr/local/bin/docker-compose
 cp /usr/local/bin/docker-compose /usr/sbin
 ```
 * clone repo aris
-`git clone http://gitlab.digi.corp.bankbtpn.co.id/naristo/elastic-docker-compose.git`
+`git clone https://github.com/naristo/inalum.git`
 
 ```
-Opsi : Bagi yang biasa menggunakan Vagrant jalankan `vagrant up` dilanjut deploy elastic stack 
-       run `vagrant ssh` untuk ssh ke virtual machine yang sudah di create menggunakan vagrant
 sysctl -w vm.max_map_count=262144
-
+vim /etc/sysctl.conf
+tambahkan vm.max_map_count=262144
 ```
 ## Untuk deploy Elastic Stack tanpa mengaktifkan Auth jalankan 
 run `docker-compose -f script/elastic-docker.yml up`
@@ -37,9 +30,9 @@ run `docker-compose -f script/elastic-docker.yml up`
 ## Untuk deploy Elastic Stack dengan Auth jalankan
 run `docker-compose -f script/elastic-docker-auth.yml up`
 
-setelah docker es-01 up & running lanjutkan dengan setup password untuk elasticsearch
+setelah docker es-master-01 up & running lanjutkan dengan setup password untuk elasticsearch
 * buka terminal baru 
-* jalankan command `docker exec es-01 /bin/bash -c "bin/elasticsearch-setup-passwords auto --batch --url http://es-master-01:9200"`
+* jalankan command `docker exec es-master-01 /bin/bash -c "bin/elasticsearch-setup-passwords auto --batch --url http://es-master-01:9200"`
 * copy user dan password yang tergenerate di screen `simpan atau di hapalkan`
 dan update kibana password in elastic-docker-auth.yml
 
