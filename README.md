@@ -16,6 +16,12 @@ cp /usr/local/bin/docker-compose /usr/sbin
 * clone repo aris
 `git clone https://github.com/naristo/inalum.git`
 
+* update config dari git
+```
+cd inalum
+git pull
+```
+
 ```
 sysctl -w vm.max_map_count=262144
 vim /etc/sysctl.conf
@@ -37,5 +43,7 @@ setelah docker es-master-01 up & running lanjutkan dengan setup password untuk e
 dan update kibana password in elastic-docker-auth.yml
 
 --- 
-
+## Usage
+* untuk restart salah satu instance : `docker-compose -f elastic-docker-auth.yml restart [nama-instance]`
+* untuk apply update config : `docker-compose -f elastic-docker-auth.yml pull`
 
