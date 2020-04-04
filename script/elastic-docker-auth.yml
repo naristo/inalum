@@ -84,33 +84,33 @@ services:
       ELASTICSEARCH_PASSWORD: 8EZZ0VbPI26AO9kvzFE8 
     networks:
       - elastic
-  logstash-01:
-    image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
-    container_name: logstash-01
-    ports:
-      - 9600:9600
-      - 5401:5401
-      - 5402:5402
-      - 5403:5403
-      - 5404:5404
-      - 5405:5405
-      - 5406:5406
-      - 5407:5407
-      - 5408:5408
-      - 5409:5409
-      - 5410:5410
-      - 5411:5411
-    environment:
-      LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
-      ELASTICSEARCH_URL: http://es-master-01:9200
-      ELASTICSEARCH_HOSTS: http://es-master-01:9200
-      ELASTICSEARCH_USERNAME: logstash_system
-      ELASTICSEARCH_PASSWORD: 0qejE6zzTsl4wb0pzsRN
-    volumes:
-      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
-      - ./logstash/config/:/usr/share/logstash/config/
-    networks:
-      - elastic
+#  logstash-01:
+#    image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+#    container_name: logstash-01
+#    ports:
+#      - 9600:9600
+#      - 5401:5401
+#      - 5402:5402
+#      - 5403:5403
+#      - 5404:5404
+#      - 5405:5405
+#      - 5406:5406
+#      - 5407:5407
+#      - 5408:5408
+#      - 5409:5409
+#      - 5410:5410
+#      - 5411:5411
+#    environment:
+#      LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
+#      ELASTICSEARCH_URL: http://es-master-01:9200
+#      ELASTICSEARCH_HOSTS: http://es-master-01:9200
+#      ELASTICSEARCH_USERNAME: logstash_system
+#      ELASTICSEARCH_PASSWORD: 0qejE6zzTsl4wb0pzsRN
+#    volumes:
+#      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
+#      - ./logstash/config/:/usr/share/logstash/config/
+#    networks:
+#      - elastic
 
 volumes:
   data-01:
