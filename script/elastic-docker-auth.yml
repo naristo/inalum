@@ -112,14 +112,27 @@ services:
     networks:
       - elastic
 
+#volumes:
+#  data-01:
+#    driver: local
+#  data-02:
+#    driver: local
+#  data-03:
+#    driver: local
+    
 volumes:
   data-01:
-    driver: local
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/es/data-01
   data-02:
-    driver: local
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/es/data-01
   data-03:
-    driver: local
-
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/es/data-01
 networks:
   elastic:
     driver: bridge
