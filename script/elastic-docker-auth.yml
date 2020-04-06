@@ -131,11 +131,11 @@ volumes:
   data-02:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/es/data-01
+      mountpoint: /data/es/data-02
   data-03:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/es/data-01
+      mountpoint: /data/es/data-03
 networks:
   elastic:
     driver: bridge
