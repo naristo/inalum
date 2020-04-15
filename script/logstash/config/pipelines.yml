@@ -1,4 +1,11 @@
-# List of pipelines to be loaded by Logstash
+- pipeline.id: test
+  path.config: "/usr/share/logstash/config/test.yml"
+- pipeline.id: beats
+  path.config: "/usr/share/logstash/config/beats.yml"
+- pipeline.id: syslog
+  path.config: "/usr/share/logstash/config/syslog.yml"#
+
+#List of pipelines to be loaded by Logstash
 #
 # This document must be a list of dictionaries/hashes, where the keys/values are pipeline settings.
 # Default values for omitted settings are read from the `logstash.yml` file.

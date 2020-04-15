@@ -1,2 +1,6 @@
 - pipeline.id: test
   path.config: "/usr/share/logstash/config/test.yml"
+- pipeline.id: beats
+  path.config: "/usr/share/logstash/config/beats.yml"
+- pipeline.id: syslog
+  path.config: "/usr/share/logstash/config/syslog.yml"

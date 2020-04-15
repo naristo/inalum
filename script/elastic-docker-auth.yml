@@ -92,6 +92,7 @@ services:
     container_name: logstash-01
     ports:
       - 9600:9600
+      - 514:5140
       - 5401:5401
       - 5402:5402
       - 5403:5403
@@ -110,8 +111,9 @@ services:
       #ELASTICSEARCH_USERNAME: logstash_system
       #ELASTICSEARCH_PASSWORD: 0qejE6zzTsl4wb0pzsRN
     volumes:
-      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
-      - ./logstash/config/:/usr/share/logstash/config/
+      - ./logstash/config/pipeline.yml:/usr/share/logstash/config.pipeline.yml
+      - ./logstash/conf.d/:/usr/share/logstash/config/
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
     networks:
       - elastic
 
