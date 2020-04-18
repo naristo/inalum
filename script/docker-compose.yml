@@ -12,7 +12,7 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
-      - xpack.security.enabled=true
+      - xpack.security.enabled=false
     #mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
@@ -37,7 +37,7 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
-      - xpack.security.enabled=true
+      - xpack.security.enabled=false
     #mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
@@ -62,7 +62,7 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
-      - xpack.security.enabled=true
+      - xpack.security.enabled=false
     #mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
