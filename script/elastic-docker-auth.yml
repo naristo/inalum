@@ -83,8 +83,8 @@ services:
     environment:
       ELASTICSEARCH_URL: http://es-master-01:9200
       ELASTICSEARCH_HOSTS: http://es-master-01:9200
-      ELASTICSEARCH_USERNAME: kibana
-      ELASTICSEARCH_PASSWORD: 8EZZ0VbPI26AO9kvzFE8 
+      ELASTICSEARCH_USERNAME: ${KIBANA_USER}
+      ELASTICSEARCH_PASSWORD: ${KIBANA_PASS}
     networks:
       - elastic
   logstash-01:
@@ -143,14 +143,6 @@ services:
       - elastic
     depends_on:
       - es-master-01
-
-#volumes:
-#  data-01:
-#    driver: local
-#  data-02:
-#    driver: local
-#  data-03:
-#    driver: local
     
 volumes:
   data-01:
