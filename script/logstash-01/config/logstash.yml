@@ -5,6 +5,7 @@
 node.name: logstash-01
 http.host: "0.0.0.0"
 xpack.monitoring.elasticsearch.hosts: [ "http://es-master-01:9200" ]
+pipeline.id: "syslog"
 
 ## X-Pack security credentials
 #
