@@ -1,4 +1,4 @@
-version: '2.2'
+version: '3.2'
 services:
   es-master-01:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
@@ -13,7 +13,7 @@ services:
       - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
-    mem_limit: ${ES_MEM_LIMIT}
+    #mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
@@ -38,7 +38,7 @@ services:
       - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
-    mem_limit: ${ES_MEM_LIMIT}
+    #mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
@@ -63,7 +63,7 @@ services:
       - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
-    mem_limit: ${ES_MEM_LIMIT}
+    #mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
@@ -88,15 +88,15 @@ services:
     networks:
       - elastic
   logstash-01:
-    image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+    #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+    build:
+      context: logstash-01/
+      args:
+        ELK_VERSION: $LOGSTASH_VERSION
     container_name: logstash-01
     user: root
     environment:
       LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
-      #ELASTICSEARCH_URL: http://es-master-01:9200
-      #ELASTICSEARCH_HOSTS: http://es-master-01:9200
-      #ELASTICSEARCH_USERNAME: logstash_system
-      #ELASTICSEARCH_PASSWORD: 0qejE6zzTsl4wb0pzsRN
     volumes:
       - type: bind
         source: ./logstash-01/config/logstash.yml
@@ -109,7 +109,7 @@ services:
     ports:
       - "514:514/tcp"
       - "514:514/udp"
-      - "9600:9600"
+      - "9601:9600"
     networks:
       - elastic
     depends_on:
@@ -117,15 +117,16 @@ services:
     
 
   logstash-02:
-    image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+    #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+    build:
+      context: logstash-02/
+      args:
+        ELK_VERSION: $LOGSTASH_VERSION
     container_name: logstash-02
     user: root
     environment:
       LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
-      #ELASTICSEARCH_URL: http://es-master-01:9200
-      #ELASTICSEARCH_HOSTS: http://es-master-01:9200
-      #ELASTICSEARCH_USERNAME: logstash_system
-      #ELASTICSEARCH_PASSWORD: 0qejE6zzTsl4wb0pzsRN
+
     volumes:
       - type: bind
         source: ./logstash-02/config/logstash.yml
@@ -137,12 +138,12 @@ services:
         read_only: true
     ports:
       - "5401:5401"
-      - "9600:9600"
+      - "9602:9600"
     networks:
       - elastic
     depends_on:
       - es-master-01
-      
+
 #volumes:
 #  data-01:
 #    driver: local
