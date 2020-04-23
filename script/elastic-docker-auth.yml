@@ -129,19 +129,9 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
     volumes:
-      - type: bind
-        source: ./logstash-01/config/logstash.yml
-        target: /usr/share/logstash/config/logstash.yml
-        read_only: true
-      - type: bind
-        source: ./logstash-01/pipeline
-        target: /usr/share/logstash/pipeline
-        read_only: true
-      - type: bind
-        source: ./logstash-01/config/pipeline.yml
-        target: /usr/share/logstash/config/pipeline.yml
-        read_only: true
-      - type: bind
+      - ./logstash-01/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash-01/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./logstash-01/pipeline:/usr/share/logstash/pipeline
     ports:
       - "514:514/tcp"
       - "514:514/udp"
@@ -164,14 +154,9 @@ services:
       LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
 
     volumes:
-      - type: bind
-        source: ./logstash-02/config/logstash.yml
-        target: /usr/share/logstash/config/logstash.yml
-        read_only: true
-      - type: bind
-        source: ./logstash-02/pipeline
-        target: /usr/share/logstash/pipeline
-        read_only: true
+      - ./logstash-02/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash-02/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./logstash-02/pipeline:/usr/share/logstash/pipeline
     ports:
       - "5401:5401"
       - "9602:9600"
@@ -190,6 +175,10 @@ volumes:
     driver_opts:
       mountpoint: /data/es/data-02
   data-03:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/es/data-03
+  machine-learning-01:
     driver: local-persist
     driver_opts:
       mountpoint: /data/es/data-03

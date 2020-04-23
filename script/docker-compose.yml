@@ -24,6 +24,8 @@ services:
       - 9200:9200
     networks:
       - elastic
+    depends_on:
+        - es-master-02
 
   es-master-02:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
@@ -49,6 +51,8 @@ services:
       - 9201:9201
     networks:
       - elastic
+    depends_on:
+        - es-master-03
 
   es-master-03:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
@@ -87,6 +91,8 @@ services:
       ELASTICSEARCH_PASSWORD: ${KIBANA_PASS}
     networks:
       - elastic
+    depends_on:
+        - es-master-01
   logstash-01:
     #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
     build:
@@ -98,56 +104,45 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
     volumes:
-      - type: bind
-        source: ./logstash-01/config/logstash.yml
-        target: /usr/share/logstash/config/logstash.yml
-        read_only: true
-      - type: bind
-        source: ./logstash-01/config/pipeline.yml
-        target: /usr/share/logstash/config/pipeline.yml
-        read_only: true
-      - type: bind
-        source: ./logstash-01/pipeline
-        target: /usr/share/logstash/pipeline
-        read_only: true
+      - ./logstash-01/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash-01/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./logstash-01/pipeline:/usr/share/logstash/pipeline
     ports:
       - "514:514/tcp"
       - "514:514/udp"
+      - "5401:5401"
       - "9601:9600"
     networks:
       - elastic
     depends_on:
       - es-master-01
-    
 
-  logstash-02:
-    #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
-    build:
-      context: logstash-02/
-      args:
-        ELK_VERSION: $LOGSTASH_VERSION
-    container_name: logstash-02
-    user: root
-    environment:
-      LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
 
-    volumes:
-      - type: bind
-        source: ./logstash-02/config/logstash.yml
-        target: /usr/share/logstash/config/logstash.yml
-        read_only: true
-      - type: bind
-        source: ./logstash-02/pipeline
-        target: /usr/share/logstash/pipeline
-        read_only: true
-    ports:
-      - "5401:5401"
-      - "9602:9600"
-    networks:
-      - elastic
-    depends_on:
-      - es-master-01
-    
+#  logstash-02:
+  #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+#  build:
+#      context: logstash-02/
+#      args:
+#        ELK_VERSION: $LOGSTASH_VERSION
+#    container_name: logstash-02
+##    user: root
+#    environment:
+#      LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
+#
+#    volumes:
+#      - ./logstash-02/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+#      - type: bind
+#        source: ./logstash-02/pipeline
+#        target: /usr/share/logstash/pipeline
+#        read_only: true
+#    ports:
+#      - "5401:5401"
+#      - "9602:9600"
+#    networks:
+##      - elastic
+#    depends_on:
+#      - es-master-01
+
 volumes:
   data-01:
     driver: local-persist

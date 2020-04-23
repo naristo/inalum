@@ -10,8 +10,8 @@ xpack.monitoring.elasticsearch.hosts: [ "http://es-master-01:9200" ]
 ## X-Pack security credentials
 #
 xpack.monitoring.enabled: true
-xpack.monitoring.elasticsearch.username: elastic
-xpack.monitoring.elasticsearch.password: K4FmlAKKIRGkG0IbQtg4
+#xpack.monitoring.elasticsearch.username: elastic
+#xpack.monitoring.elasticsearch.password: K4FmlAKKIRGkG0IbQtg4
 
 #xpack.management.enabled: true
 #xpack.management.elasticsearch.hosts: "http://es-master-01:9200/"
