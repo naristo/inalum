@@ -103,6 +103,10 @@ services:
         target: /usr/share/logstash/config/logstash.yml
         read_only: true
       - type: bind
+        source: ./logstash-01/config/pipeline.yml
+        target: /usr/share/logstash/config/pipeline.yml
+        read_only: true
+      - type: bind
         source: ./logstash-01/pipeline
         target: /usr/share/logstash/pipeline
         read_only: true
