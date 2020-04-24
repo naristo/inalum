@@ -46,7 +46,7 @@ services:
     volumes:
       - data-02:/usr/share/elasticsearch/data
     ports:
-      - 9201:9201
+      - 9201:9200
     networks:
       - elastic
 
@@ -71,7 +71,7 @@ services:
     volumes:
       - data-03:/usr/share/elasticsearch/data
     ports:
-      - 9202:9202
+      - 9202:9200
     networks:
       - elastic
 
@@ -103,7 +103,7 @@ services:
     volumes:
       - machine-learning-01:/usr/share/elasticsearch/data
     ports:
-      - 9202:9202
+      - 9203:9200
     networks:
       - elastic
   kibana-01:
@@ -181,7 +181,7 @@ volumes:
   machine-learning-01:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/es/data-03
+      mountpoint: /data/es/ml-01
 networks:
   elastic:
     driver: bridge
