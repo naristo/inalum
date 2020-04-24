@@ -92,7 +92,7 @@ services:
       - discovery.seed_hosts=es-master-01,es-master-02
       - cluster.initial_master_nodes=es-master-01,es-master-02,es-master-03
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
+      - "ES_JAVA_OPTS=-Xms${ESML_JVM_HEAP} -Xmx${ESML_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
     #mem_limit: ${ES_MEM_LIMIT}
