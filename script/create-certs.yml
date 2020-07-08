@@ -1,12 +1,12 @@
 version: '2.2'
 
 services:
-  create_certs:
+  create_certs2:
     image: docker.elastic.co/elasticsearch/elasticsearch:${VERSION}
-    container_name: create_certs
+    container_name: create_certs2
     command: >
       bash -c '
-        export http_proxy="http://svrtscmpr06:3128";yum install -y -q -e 0 unzip;
+        yum install -y -q -e 0 unzip;
         if [[ ! -f /certs/bundle.zip ]]; then
           bin/elasticsearch-certutil cert --silent --pem --in config/certificates/instances.yml -out /certs/bundle.zip;
           unzip /certs/bundle.zip -d /certs;
@@ -15,13 +15,13 @@ services:
       '
     working_dir: /usr/share/elasticsearch
     volumes:
-      - certs:/certs
+      - es-certs:/certs
       - .:/usr/share/elasticsearch/config/certificates
     networks:
       - elastic
 
 volumes:
-  certs:
+  es-certs:
     driver: local
 
 networks:

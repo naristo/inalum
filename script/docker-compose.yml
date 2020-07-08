@@ -12,20 +12,27 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
-      - xpack.security.enabled=false
-    #mem_limit: ${ES_MEM_LIMIT}
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true 
+      - xpack.security.http.ssl.key=$CERTS_DIR/es-master-01/es-master-01.key
+      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es-master-01/es-master-01.crt
+      - xpack.security.transport.ssl.enabled=true 
+      - xpack.security.transport.ssl.verification_mode=certificate 
+      - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es-master-01/es-master-01.crt
+      - xpack.security.transport.ssl.key=$CERTS_DIR/es-master-01/es-master-01.key
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - data-01:/usr/share/elasticsearch/data
+      - certs:$CERTS_DIR
     ports:
       - 9200:9200
     networks:
       - elastic
-    depends_on:
-        - es-master-02
 
   es-master-02:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
@@ -39,20 +46,27 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
       - xpack.license.self_generated.type=trial
-      - xpack.security.enabled=false
-    #mem_limit: ${ES_MEM_LIMIT}
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=$CERTS_DIR/es-master-02/es-master-02.key
+      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es-master-02/es-master-02.crt
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es-master-02/es-master-02.crt
+      - xpack.security.transport.ssl.key=$CERTS_DIR/es-master-02/es-master-02.key
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - data-02:/usr/share/elasticsearch/data
+      - certs:$CERTS_DIR
     ports:
-      - 9201:9201
+      - 9201:9200
     networks:
       - elastic
-    depends_on:
-        - es-master-03
 
   es-master-03:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
@@ -65,34 +79,87 @@ services:
       - cluster.initial_master_nodes=es-master-01,es-master-02,es-master-03
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
+      - xpack.security.enabled=true
       - xpack.license.self_generated.type=trial
-      - xpack.security.enabled=false
-    #mem_limit: ${ES_MEM_LIMIT}
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=$CERTS_DIR/es-master-03/es-master-03.key
+      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es-master-03/es-master-03.crt
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es-master-03/es-master-03.crt
+      - xpack.security.transport.ssl.key=$CERTS_DIR/es-master-03/es-master-03.key
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - data-03:/usr/share/elasticsearch/data
+      - certs:$CERTS_DIR
     ports:
-      - 9202:9202
+      - 9202:9200
     networks:
       - elastic
 
+  es-ml-01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: es-ml-01
+    user: root
+    environment:
+      - node.ml=true
+      - node.master=false
+      - node.voting_only=false
+      - node.data=false
+      - node.ingest=false
+      - xpack.ml.enabled=true
+      - cluster.remote.connect=false
+      - node.name=es-ml-01
+      - cluster.name=es-siem-cluster
+      - discovery.seed_hosts=es-master-01,es-master-02
+      - cluster.initial_master_nodes=es-master-01,es-master-02,es-master-03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms${ESML_JVM_HEAP} -Xmx${ESML_JVM_HEAP}"
+      - xpack.security.enabled=true
+      - xpack.license.self_generated.type=trial
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=$CERTS_DIR/es-ml-01/es-ml-01.key
+      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es-ml-01/es-ml-01.crt
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es-ml-01/es-ml-01.crt
+      - xpack.security.transport.ssl.key=$CERTS_DIR/es-ml-01/es-ml-01.key 
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - machine-learning-01:/usr/share/elasticsearch/data
+      - certs:$CERTS_DIR
+    ports:
+      - 9203:9200
+    networks:
+      - elastic
   kibana-01:
     image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
     container_name: kibana-01
     ports:
       - 5601:5601
     environment:
-      ELASTICSEARCH_URL: http://es-master-01:9200
-      ELASTICSEARCH_HOSTS: http://es-master-01:9200
+      ELASTICSEARCH_URL: https://es-master-01:9200
+      ELASTICSEARCH_HOSTS: https://es-master-01:9200
       ELASTICSEARCH_USERNAME: ${KIBANA_USER}
       ELASTICSEARCH_PASSWORD: ${KIBANA_PASS}
+      ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: $CERTS_DIR/ca/ca.crt
+      SERVER_SSL_ENABLED: "true"
+      SERVER_SSL_KEY: $CERTS_DIR/kibana-01/kibana-01.key
+      SERVER_SSL_CERTIFICATE: $CERTS_DIR/kibana-01/kibana-01.crt
+    volumes:
+      - certs:$CERTS_DIR
     networks:
       - elastic
-    depends_on:
-        - es-master-01
   logstash-01:
     #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
     build:
@@ -110,38 +177,35 @@ services:
     ports:
       - "514:514/tcp"
       - "514:514/udp"
-      - "5401:5401"
       - "9601:9600"
     networks:
       - elastic
     depends_on:
       - es-master-01
+    
 
+  logstash-02:
+    #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+    build:
+      context: logstash-02/
+      args:
+        ELK_VERSION: $LOGSTASH_VERSION
+    container_name: logstash-02
+    user: root
+    environment:
+      LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
 
-#  logstash-02:
-  #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
-#  build:
-#      context: logstash-02/
-#      args:
-#        ELK_VERSION: $LOGSTASH_VERSION
-#    container_name: logstash-02
-##    user: root
-#    environment:
-#      LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
-#
-#    volumes:
-#      - ./logstash-02/config/logstash.yml:/usr/share/logstash/config/logstash.yml
-#      - type: bind
-#        source: ./logstash-02/pipeline
-#        target: /usr/share/logstash/pipeline
-#        read_only: true
-#    ports:
-#      - "5401:5401"
-#      - "9602:9600"
-#    networks:
-##      - elastic
-#    depends_on:
-#      - es-master-01
+    volumes:
+      - ./logstash-02/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash-02/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./logstash-02/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5401:5401"
+      - "9602:9600"
+    networks:
+      - elastic
+    depends_on:
+      - es-master-01
 
 volumes:
   data-01:
@@ -156,6 +220,14 @@ volumes:
     driver: local-persist
     driver_opts:
       mountpoint: /data/es/data-03
+  machine-learning-01:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/es/ml-01
+  certs:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /root/inalum/script/es-certs
 networks:
   elastic:
     driver: bridge

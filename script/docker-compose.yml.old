@@ -1,0 +1,161 @@
+version: '3.2'
+services:
+  es-master-01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    user: root
+    container_name: es-master-01
+    environment:
+      - node.name=es-master-01
+      - cluster.name=es-siem-cluster
+      - discovery.seed_hosts=es-master-02,es-master-03
+      - cluster.initial_master_nodes=es-master-01,es-master-02,es-master-03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
+      - xpack.license.self_generated.type=trial
+      - xpack.security.enabled=false
+    #mem_limit: ${ES_MEM_LIMIT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data-01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+    depends_on:
+        - es-master-02
+
+  es-master-02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: es-master-02
+    user: root
+    environment:
+      - node.name=es-master-02
+      - cluster.name=es-siem-cluster
+      - discovery.seed_hosts=es-master-01,es-master-03
+      - cluster.initial_master_nodes=es-master-01,es-master-02,es-master-03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
+      - xpack.license.self_generated.type=trial
+      - xpack.security.enabled=false
+    #mem_limit: ${ES_MEM_LIMIT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data-02:/usr/share/elasticsearch/data
+    ports:
+      - 9201:9201
+    networks:
+      - elastic
+    depends_on:
+        - es-master-03
+
+  es-master-03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: es-master-03
+    user: root
+    environment:
+      - node.name=es-master-03
+      - cluster.name=es-siem-cluster
+      - discovery.seed_hosts=es-master-01,es-master-02
+      - cluster.initial_master_nodes=es-master-01,es-master-02,es-master-03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms${ES_JVM_HEAP} -Xmx${ES_JVM_HEAP}"
+      - xpack.license.self_generated.type=trial
+      - xpack.security.enabled=false
+    #mem_limit: ${ES_MEM_LIMIT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data-03:/usr/share/elasticsearch/data
+    ports:
+      - 9202:9202
+    networks:
+      - elastic
+
+  kibana-01:
+    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
+    container_name: kibana-01
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://es-master-01:9200
+      ELASTICSEARCH_HOSTS: http://es-master-01:9200
+      ELASTICSEARCH_USERNAME: ${KIBANA_USER}
+      ELASTICSEARCH_PASSWORD: ${KIBANA_PASS}
+    networks:
+      - elastic
+    depends_on:
+        - es-master-01
+  logstash-01:
+    #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+    build:
+      context: logstash-01/
+      args:
+        ELK_VERSION: $LOGSTASH_VERSION
+    container_name: logstash-01
+    user: root
+    environment:
+      LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
+    volumes:
+      - ./logstash-01/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash-01/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./logstash-01/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "514:514/tcp"
+      - "514:514/udp"
+      - "5401:5401"
+      - "9601:9600"
+    networks:
+      - elastic
+    depends_on:
+      - es-master-01
+
+
+#  logstash-02:
+  #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+#  build:
+#      context: logstash-02/
+#      args:
+#        ELK_VERSION: $LOGSTASH_VERSION
+#    container_name: logstash-02
+##    user: root
+#    environment:
+#      LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
+#
+#    volumes:
+#      - ./logstash-02/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+#      - type: bind
+#        source: ./logstash-02/pipeline
+#        target: /usr/share/logstash/pipeline
+#        read_only: true
+#    ports:
+#      - "5401:5401"
+#      - "9602:9600"
+#    networks:
+##      - elastic
+#    depends_on:
+#      - es-master-01
+
+volumes:
+  data-01:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/es/data-01
+  data-02:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/es/data-02
+  data-03:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/es/data-03
+networks:
+  elastic:
+    driver: bridge

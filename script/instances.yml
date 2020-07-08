@@ -1,26 +1,36 @@
 instances:
-  - name: es01
+  - name: es-master-01
     dns:
-      - es01
+      - es-master-01
+      - localhost
+    ip:
+      - 127.0.0.1
+      - 10.100.0.107
+
+  - name: es-master-02
+    dns:
+      - es-master-02
       - localhost
     ip:
       - 127.0.0.1
 
-  - name: es02
+  - name: es-master-03
     dns:
-      - es02
+      - es-master-03
       - localhost
     ip:
       - 127.0.0.1
 
-  - name: es03
+  - name: 'kibana-01'
     dns:
-      - es03
+      - kibana-01
+      - localhost
+    ip:
+      - 10.100.0.107
+  
+  - name: es-ml-01
+    dns:
+      - es-ml-01
       - localhost
     ip:
       - 127.0.0.1
-
-  - name: 'kib01'
-    dns:
-      - kib01
-      - localhost
