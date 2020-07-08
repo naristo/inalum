@@ -173,6 +173,7 @@ services:
     volumes:
       - ./logstash-01/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logstash-01/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./logstash-02/config/ca.crt:/usr/share/logstash/config/ca.crt
       - ./logstash-01/pipeline:/usr/share/logstash/pipeline
     ports:
       - "514:514/tcp"
@@ -198,6 +199,7 @@ services:
     volumes:
       - ./logstash-02/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logstash-02/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./logstash-02/config/ca.crt:/usr/share/logstash/config/ca.crt
       - ./logstash-02/pipeline:/usr/share/logstash/pipeline
     ports:
       - "5401:5401"
