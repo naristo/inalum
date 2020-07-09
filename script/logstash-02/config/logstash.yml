@@ -4,17 +4,12 @@
 #
 node.name: logstash-02
 http.host: "0.0.0.0"
-xpack.monitoring.elasticsearch.hosts: [ "http://es-master-01:9200" ]
-pipeline.id: "beats"
-## X-Pack security credentials
-#
+xpack.monitoring.elasticsearch.hosts: [ "https://es-master-01:9200" ]
 xpack.monitoring.enabled: true
 xpack.monitoring.elasticsearch.username: elastic
 xpack.monitoring.elasticsearch.password: K4FmlAKKIRGkG0IbQtg4
-
-#xpack.management.enabled: true
-#xpack.management.elasticsearch.hosts: "http://es-master-01:9200/"
-#xpack.management.elasticsearch.username: elastic
-#xpack.management.elasticsearch.password: 315gSxdXU54TkifhEV8h
-#xpack.management.logstash.poll_interval: 5s
-#xpack.management.pipeline.id: ["twitter", "beats"]
+xpack.monitoring.elasticsearch.ssl.certificate_authority: "/usr/share/logstash/config/ca.crt"
+xpack.monitoring.elasticsearch.ssl.verification_mode: certificate
+xpack.monitoring.elasticsearch.sniffing: false
+xpack.monitoring.collection.interval: 10s
+xpack.monitoring.collection.pipeline.details.enabled: true
