@@ -22,6 +22,13 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es-master-01/es-master-01.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es-master-01/es-master-01.key
+      - xpack.notification.email.account.outlook_account.profile=outlook
+      - xpack.notification.email.account.outlook_account.smtp.auth=true
+      - xpack.notification.email.account.outlook_account.smtp.starttls.enable=true
+      - xpack.notification.email.account.outlook_account.smtp.host=smtp.office365.com
+      - xpack.notification.email.account.outlook_account.smtp.port=587
+      - xpack.notification.email.account.outlook_account.smtp.user=kirim_cstm@outlook.com
+ #     - xpack.notification.email.account.outlook_account.smtp.secure_password=Zxcvbnm@123
     ulimits:
       memlock:
         soft: -1
@@ -29,6 +36,7 @@ services:
     volumes:
       - data-01:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
+      - ./elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
     ports:
       - 9200:9200
     networks:
@@ -56,6 +64,13 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es-master-02/es-master-02.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es-master-02/es-master-02.key
+      - xpack.notification.email.account.outlook_account.profile=outlook
+      - xpack.notification.email.account.outlook_account.smtp.auth=true
+      - xpack.notification.email.account.outlook_account.smtp.starttls.enable=true
+      - xpack.notification.email.account.outlook_account.smtp.host=smtp.office365.com
+      - xpack.notification.email.account.outlook_account.smtp.port=587
+      - xpack.notification.email.account.outlook_account.smtp.user=kirim_cstm@outlook.com
+#      - xpack.notification.email.account.outlook_account.smtp.secure_password=Zxcvbnm@123
     ulimits:
       memlock:
         soft: -1
@@ -63,6 +78,8 @@ services:
     volumes:
       - data-02:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
+      - ./elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
+
     ports:
       - 9201:9200
     networks:
@@ -90,6 +107,13 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es-master-03/es-master-03.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es-master-03/es-master-03.key
+      - xpack.notification.email.account.outlook_account.profile=outlook
+      - xpack.notification.email.account.outlook_account.smtp.auth=true
+      - xpack.notification.email.account.outlook_account.smtp.starttls.enable=true
+      - xpack.notification.email.account.outlook_account.smtp.host=smtp.office365.com
+      - xpack.notification.email.account.outlook_account.smtp.port=587
+      - xpack.notification.email.account.outlook_account.smtp.user=kirim_cstm@outlook.com
+#      - xpack.notification.email.account.outlook_account.smtp.secure_password=Zxcvbnm@123
     ulimits:
       memlock:
         soft: -1
@@ -97,6 +121,7 @@ services:
     volumes:
       - data-03:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
+      - ./elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
     ports:
       - 9202:9200
     networks:
@@ -131,6 +156,13 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es-ml-01/es-ml-01.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es-ml-01/es-ml-01.key 
+      - xpack.notification.email.account.outlook_account.profile=outlook
+      - xpack.notification.email.account.outlook_account.smtp.auth=true
+      - xpack.notification.email.account.outlook_account.smtp.starttls.enable=true
+      - xpack.notification.email.account.outlook_account.smtp.host=smtp.office365.com
+      - xpack.notification.email.account.outlook_account.smtp.port=587
+      - xpack.notification.email.account.outlook_account.smtp.user=kirim_cstm@outlook.com
+ #     - xpack.notification.email.account.outlook_account.smtp.secure_password=Zxcvbnm@123
     ulimits:
       memlock:
         soft: -1
@@ -138,6 +170,7 @@ services:
     volumes:
       - machine-learning-01:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
+      - ./elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
     ports:
       - 9203:9200
     networks:
@@ -147,26 +180,28 @@ services:
     container_name: kibana-01
     ports:
       - 5601:5601
-    environment:
-      ELASTICSEARCH_URL: https://es-master-01:9200
-      ELASTICSEARCH_HOSTS: https://es-master-01:9200
-      ELASTICSEARCH_USERNAME: ${KIBANA_USER}
-      ELASTICSEARCH_PASSWORD: ${KIBANA_PASS}
-      ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: $CERTS_DIR/ca/ca.crt
-      SERVER_SSL_ENABLED: "true"
-      SERVER_SSL_KEY: $CERTS_DIR/kibana-01/kibana-01.key
-      SERVER_SSL_CERTIFICATE: $CERTS_DIR/kibana-01/kibana-01.crt
+    #environment:
+      #ELASTICSEARCH_URL: https://es-master-01:9200
+      #ELASTICSEARCH_HOSTS: https://es-master-01:9200
+      #ELASTICSEARCH_USERNAME: ${KIBANA_USER}
+      #ELASTICSEARCH_PASSWORD: ${KIBANA_PASS}
+      #ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: $CERTS_DIR/ca/ca.crt
+      #SERVER_SSL_ENABLED: "true"
+      #SERVER_SSL_KEY: $CERTS_DIR/kibana-01/kibana-01.key
+      #SERVER_SSL_CERTIFICATE: $CERTS_DIR/kibana-01/kibana-01.crt
+      #xpack.encryptedSavedObjects.encryptionKey: 'IniProjectuntukInalummembuatCSTM2020'
     volumes:
       - certs:$CERTS_DIR
+      - ./kibana-01/kibana.yml:/usr/share/kibana/config/kibana.yml
     networks:
       - elastic
-  logstash-01:
-    #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
-    build:
-      context: logstash-01/
-      args:
-        ELK_VERSION: $LOGSTASH_VERSION
-    container_name: logstash-01
+  es-logstash-01:
+    image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+    #build:
+    #  context: logstash-01/
+    #  args:
+    #   ELK_VERSION: $LOGSTASH_VERSION
+    container_name: es-logstash-01
     user: root
     environment:
       LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"
@@ -185,13 +220,13 @@ services:
       - es-master-01
     
 
-  logstash-02:
-    #image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
-    build:
-      context: logstash-02/
-      args:
-        ELK_VERSION: $LOGSTASH_VERSION
-    container_name: logstash-02
+  es-logstash-02:
+    image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+    #build:
+    #  context: logstash-02/
+    #  args:
+    #    ELK_VERSION: $LOGSTASH_VERSION
+    container_name: es-logstash-02
     user: root
     environment:
       LS_JAVA_OPTS: "-Xmx${LS_JVM_HEAP} -Xms${LS_JVM_HEAP}"

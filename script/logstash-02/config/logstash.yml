@@ -2,7 +2,7 @@
 ## Default Logstash configuration from Logstash base image.
 ## https://github.com/elastic/logstash/blob/master/docker/data/logstash/config/logstash-full.yml
 #
-node.name: logstash-02
+node.name: es-logstash-02
 http.host: "0.0.0.0"
 xpack.monitoring.elasticsearch.hosts: [ "https://es-master-01:9200" ]
 xpack.monitoring.enabled: true
